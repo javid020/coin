@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="999c35ae-c47e-4399-b1b6-5a44d6e7edad" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coin.py" beforeDir="false" afterPath="$PROJECT_DIR$/coin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/constraint/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/constraint/__init__.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -15,36 +14,44 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="__init__.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="__init__.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/constraint/__init__.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="195">
-              <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
+            <state relative-caret-position="-1997">
+              <caret line="141" lean-forward="true" selection-start-line="141" selection-end-line="141" />
               <folding>
                 <element signature="e#0#64#0" expanded="true" />
-                <element signature="e#594#8161#0" />
+                <element signature="e#1069#2129#0" />
+                <element signature="e#2203#3342#0" />
+                <element signature="e#3384#4068#0" />
+                <element signature="e#4102#5063#0" />
+                <element signature="e#5799#8518#0" />
+                <element signature="e#11139#12482#0" />
+                <element signature="e#12599#13512#0" />
+                <element signature="e#13609#13933#0" />
+                <element signature="e#14108#14756#0" />
+                <element signature="e#14924#15665#0" />
+                <element signature="e#15793#17362#0" />
+                <element signature="e#17461#17851#0" />
+                <element signature="e#17939#19766#0" />
+                <element signature="e#19891#20479#0" />
+                <element signature="e#20600#20910#0" />
+                <element signature="e#21033#21339#0" />
+                <element signature="e#21466#22693#0" />
+                <element signature="e#22823#24054#0" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="coin.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="coin.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/coin.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="195">
-              <caret line="13" column="34" selection-start-line="13" selection-start-column="34" selection-end-line="13" selection-end-column="34" />
+              <caret line="13" column="39" lean-forward="true" selection-start-line="13" selection-start-column="39" selection-end-line="13" selection-end-column="39" />
               <folding>
                 <element signature="e#0#50#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="compat.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/constraint/compat.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="210">
-              <caret line="14" lean-forward="true" selection-start-line="14" selection-end-line="14" />
             </state>
           </provider>
         </entry>
@@ -86,7 +93,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -103,6 +109,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -166,13 +173,13 @@
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24947146" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.3018182" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Python Console" order="7" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.3018182" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="7" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -187,28 +194,124 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/constraint/__init__.py</url>
-          <line>15</line>
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/constraint/__init__.py</url>
-          <line>256</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-      </breakpoints>
-      <option name="time" value="3" />
+      <option name="time" value="9" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/constraint/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="16650">
+          <caret line="1344" selection-start-line="1344" selection-end-line="1344" />
+          <folding>
+            <element signature="e#0#64#0" expanded="true" />
+            <element signature="e#1069#2129#0" />
+            <element signature="e#2203#3342#0" />
+            <element signature="e#3384#4068#0" />
+            <element signature="e#4102#5063#0" />
+            <element signature="e#5799#8518#0" />
+            <element signature="e#11139#12482#0" />
+            <element signature="e#12599#13512#0" />
+            <element signature="e#13609#13933#0" />
+            <element signature="e#14108#14756#0" />
+            <element signature="e#14924#15665#0" />
+            <element signature="e#15793#17362#0" />
+            <element signature="e#17461#17851#0" />
+            <element signature="e#17939#19766#0" />
+            <element signature="e#19891#20479#0" />
+            <element signature="e#20600#20910#0" />
+            <element signature="e#21033#21339#0" />
+            <element signature="e#21466#22693#0" />
+            <element signature="e#22823#24054#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/constraint/compat.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="14" lean-forward="true" selection-start-line="14" selection-end-line="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/coin.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
+          <folding>
+            <element signature="e#0#50#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/constraint/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="13" selection-start-line="13" selection-end-line="13" />
+          <folding>
+            <element signature="e#0#64#0" expanded="true" />
+            <element signature="e#1069#2129#0" />
+            <element signature="e#2203#3342#0" />
+            <element signature="e#3384#4068#0" />
+            <element signature="e#4102#5063#0" />
+            <element signature="e#5799#8518#0" />
+            <element signature="e#11139#12482#0" />
+            <element signature="e#12599#13512#0" />
+            <element signature="e#13609#13933#0" />
+            <element signature="e#14108#14756#0" />
+            <element signature="e#14924#15665#0" />
+            <element signature="e#15793#17362#0" />
+            <element signature="e#17461#17851#0" />
+            <element signature="e#17939#19766#0" />
+            <element signature="e#19891#20479#0" />
+            <element signature="e#20600#20910#0" />
+            <element signature="e#21033#21339#0" />
+            <element signature="e#21466#22693#0" />
+            <element signature="e#22823#24054#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/constraint/compat.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="14" lean-forward="true" selection-start-line="14" selection-end-line="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/coin.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="13" column="34" selection-start-line="13" selection-start-column="34" selection-end-line="13" selection-end-column="34" />
+          <folding>
+            <element signature="e#0#50#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/constraint/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="10785">
           <caret line="719" column="25" lean-forward="true" selection-start-line="719" selection-start-column="25" selection-end-line="719" selection-end-column="25" />
           <folding>
             <element signature="e#0#64#0" expanded="true" />
-            <element signature="e#594#8161#0" />
+            <element signature="e#1069#2129#0" />
+            <element signature="e#2203#3342#0" />
+            <element signature="e#3384#4068#0" />
+            <element signature="e#4102#5063#0" />
+            <element signature="e#5799#8518#0" />
+            <element signature="e#11139#12482#0" />
+            <element signature="e#12599#13512#0" />
+            <element signature="e#13609#13933#0" />
+            <element signature="e#14108#14756#0" />
+            <element signature="e#14924#15665#0" />
+            <element signature="e#15793#17362#0" />
+            <element signature="e#17461#17851#0" />
+            <element signature="e#17939#19766#0" />
+            <element signature="e#19891#20479#0" />
+            <element signature="e#20600#20910#0" />
+            <element signature="e#21033#21339#0" />
+            <element signature="e#21466#22693#0" />
+            <element signature="e#22823#24054#0" />
           </folding>
         </state>
       </provider>
@@ -236,7 +339,24 @@
           <caret line="1411" selection-start-line="1411" selection-end-line="1411" />
           <folding>
             <element signature="e#0#64#0" expanded="true" />
-            <element signature="e#594#8161#0" />
+            <element signature="e#1069#2129#0" />
+            <element signature="e#2203#3342#0" />
+            <element signature="e#3384#4068#0" />
+            <element signature="e#4102#5063#0" />
+            <element signature="e#5799#8518#0" />
+            <element signature="e#11139#12482#0" />
+            <element signature="e#12599#13512#0" />
+            <element signature="e#13609#13933#0" />
+            <element signature="e#14108#14756#0" />
+            <element signature="e#14924#15665#0" />
+            <element signature="e#15793#17362#0" />
+            <element signature="e#17461#17851#0" />
+            <element signature="e#17939#19766#0" />
+            <element signature="e#19891#20479#0" />
+            <element signature="e#20600#20910#0" />
+            <element signature="e#21033#21339#0" />
+            <element signature="e#21466#22693#0" />
+            <element signature="e#22823#24054#0" />
           </folding>
         </state>
       </provider>
@@ -355,30 +475,47 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sdsadada.py" />
-    <entry file="file://$PROJECT_DIR$/constraint/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
-          <folding>
-            <element signature="e#0#64#0" expanded="true" />
-            <element signature="e#594#8161#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/constraint/compat.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="210">
-          <caret line="14" lean-forward="true" selection-start-line="14" selection-end-line="14" />
+          <caret line="14" selection-start-line="14" selection-end-line="14" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/coin.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="195">
-          <caret line="13" column="34" selection-start-line="13" selection-start-column="34" selection-end-line="13" selection-end-column="34" />
+          <caret line="13" column="39" lean-forward="true" selection-start-line="13" selection-start-column="39" selection-end-line="13" selection-end-column="39" />
           <folding>
             <element signature="e#0#50#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/constraint/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1997">
+          <caret line="141" lean-forward="true" selection-start-line="141" selection-end-line="141" />
+          <folding>
+            <element signature="e#0#64#0" expanded="true" />
+            <element signature="e#1069#2129#0" />
+            <element signature="e#2203#3342#0" />
+            <element signature="e#3384#4068#0" />
+            <element signature="e#4102#5063#0" />
+            <element signature="e#5799#8518#0" />
+            <element signature="e#11139#12482#0" />
+            <element signature="e#12599#13512#0" />
+            <element signature="e#13609#13933#0" />
+            <element signature="e#14108#14756#0" />
+            <element signature="e#14924#15665#0" />
+            <element signature="e#15793#17362#0" />
+            <element signature="e#17461#17851#0" />
+            <element signature="e#17939#19766#0" />
+            <element signature="e#19891#20479#0" />
+            <element signature="e#20600#20910#0" />
+            <element signature="e#21033#21339#0" />
+            <element signature="e#21466#22693#0" />
+            <element signature="e#22823#24054#0" />
           </folding>
         </state>
       </provider>

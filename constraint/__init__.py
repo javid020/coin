@@ -28,53 +28,6 @@ class Problem(object):
         self._constraints = []
         self._variables = {}
 
-    def reset(self):
-        """
-        Reset the current problem definition
-
-        Example:
-
-        >>> problem = Problem()
-        >>> problem.addVariable("a", [1, 2])
-        >>> problem.reset()
-        >>> problem.getSolution()
-        >>>
-        """
-        del self._constraints[:]
-        self._variables.clear()
-
-    def setSolver(self, solver):
-        """
-        Change the problem solver currently in use
-
-        Example:
-
-        >>> solver = BacktrackingSolver()
-        >>> problem = Problem(solver)
-        >>> problem.getSolver() is solver
-        True
-
-        @param solver: New problem solver
-        @type  solver: instance of a C{Solver} subclass
-        """
-        self._solver = solver
-
-    def getSolver(self):
-        """
-        Obtain the problem solver currently in use
-
-        Example:
-
-        >>> solver = BacktrackingSolver()
-        >>> problem = Problem(solver)
-        >>> problem.getSolver() is solver
-        True
-
-        @return: Solver currently in use
-        @rtype: instance of a L{Solver} subclass
-        """
-        return self._solver
-
     def addVariable(self, variable, domain):
         """
         Add a variable to the problem
@@ -106,30 +59,6 @@ class Problem(object):
             raise ValueError("Domain is empty")
         self._variables[variable] = domain
 
-    def addVariables(self, variables, domain):
-        """
-        Add one or more variables to the problem
-
-        Example:
-
-        >>> problem = Problem()
-        >>> problem.addVariables(["a", "b"], [1, 2, 3])
-        >>> solutions = problem.getSolutions()
-        >>> len(solutions)
-        9
-        >>> {'a': 3, 'b': 1} in solutions
-        True
-
-        @param variables: Any object containing a sequence of objects
-                          represeting problem variables
-        @type  variables: sequence of hashable objects
-        @param domain: Set of items defining the possible values that
-                       the given variables may assume
-        @type  domain: list, tuple, or instance of C{Domain}
-        """
-        for variable in variables:
-            self.addVariable(variable, domain)
-
     def addConstraint(self, constraint, variables=None):
         """
         Add a constraint to the problem
@@ -158,48 +87,6 @@ class Problem(object):
                       "of the Constraint class"
                 raise ValueError(msg)
         self._constraints.append((constraint, variables))
-
-    def getSolution(self):
-        """
-        Find and return a solution to the problem
-
-        Example:
-
-        >>> problem = Problem()
-        >>> problem.getSolution() is None
-        True
-        >>> problem.addVariables(["a"], [42])
-        >>> problem.getSolution()
-        {'a': 42}
-
-        @return: Solution for the problem
-        @rtype: dictionary mapping variables to values
-        """
-        domains, constraints, vconstraints = self._getArgs()
-        if not domains:
-            return None
-        return self._solver.getSolution(domains, constraints, vconstraints)
-
-    def getSolutions(self):
-        """
-        Find and return all solutions to the problem
-
-        Example:
-
-        >>> problem = Problem()
-        >>> problem.getSolutions() == []
-        True
-        >>> problem.addVariables(["a"], [42])
-        >>> problem.getSolutions()
-        [{'a': 42}]
-
-        @return: All solutions for the problem
-        @rtype: list of dictionaries mapping variables to values
-        """
-        domains, constraints, vconstraints = self._getArgs()
-        if not domains:
-            return []
-        return self._solver.getSolutions(domains, constraints, vconstraints)
 
     def getSolutionIter(self):
         """
@@ -253,73 +140,6 @@ class Problem(object):
 # Solvers
 # ----------------------------------------------------------------------
 
-
-def getArcs(domains, constraints):
-    """
-    Return a dictionary mapping pairs (arcs) of constrained variables
-
-    @attention: Currently unused.
-    """
-    arcs = {}
-    for x in constraints:
-        constraint, variables = x
-        if len(variables) == 2:
-            variable1, variable2 = variables
-            arcs.setdefault(variable1, {})\
-                .setdefault(variable2, [])\
-                .append(x)
-            arcs.setdefault(variable2, {})\
-                .setdefault(variable1, [])\
-                .append(x)
-    return arcs
-
-
-def doArc8(arcs, domains, assignments):
-    """
-    Perform the ARC-8 arc checking algorithm and prune domains
-
-    @attention: Currently unused.
-    """
-    check = dict.fromkeys(domains, True)
-    while check:
-        variable, _ = check.popitem()
-        if variable not in arcs or variable in assignments:
-            continue
-        domain = domains[variable]
-        arcsvariable = arcs[variable]
-        for othervariable in arcsvariable:
-            arcconstraints = arcsvariable[othervariable]
-            if othervariable in assignments:
-                otherdomain = [assignments[othervariable]]
-            else:
-                otherdomain = domains[othervariable]
-            if domain:
-                # changed = False
-                for value in domain[:]:
-                    assignments[variable] = value
-                    if otherdomain:
-                        for othervalue in otherdomain:
-                            assignments[othervariable] = othervalue
-                            for constraint, variables in arcconstraints:
-                                if not constraint(variables, domains,
-                                                  assignments, True):
-                                    break
-                            else:
-                                # All constraints passed. Value is safe.
-                                break
-                        else:
-                            # All othervalues failed. Kill value.
-                            domain.hideValue(value)
-                            # changed = True
-                        del assignments[othervariable]
-                del assignments[variable]
-                # if changed:
-                #     check.update(dict.fromkeys(arcsvariable))
-            if not domain:
-                return False
-    return True
-
-
 class Solver(object):
     """
     Abstract base class for solvers
@@ -327,82 +147,8 @@ class Solver(object):
     @sort: getSolution, getSolutions, getSolutionIter
     """
 
-    def getSolution(self, domains, constraints, vconstraints):
-        """
-        Return one solution for the given problem
-
-        @param domains: Dictionary mapping variables to their domains
-        @type  domains: dict
-        @param constraints: List of pairs of (constraint, variables)
-        @type  constraints: list
-        @param vconstraints: Dictionary mapping variables to a list of
-                             constraints affecting the given variables.
-        @type  vconstraints: dict
-        """
-        msg = "%s is an abstract class" % self.__class__.__name__
-        raise NotImplementedError(msg)
-
-    def getSolutions(self, domains, constraints, vconstraints):
-        """
-        Return all solutions for the given problem
-
-        @param domains: Dictionary mapping variables to domains
-        @type  domains: dict
-        @param constraints: List of pairs of (constraint, variables)
-        @type  constraints: list
-        @param vconstraints: Dictionary mapping variables to a list of
-                             constraints affecting the given variables.
-        @type  vconstraints: dict
-        """
-        msg = "%s provides only a single solution" % self.__class__.__name__
-        raise NotImplementedError(msg)
-
-    def getSolutionIter(self, domains, constraints, vconstraints):
-        """
-        Return an iterator for the solutions of the given problem
-
-        @param domains: Dictionary mapping variables to domains
-        @type  domains: dict
-        @param constraints: List of pairs of (constraint, variables)
-        @type  constraints: list
-        @param vconstraints: Dictionary mapping variables to a list of
-                             constraints affecting the given variables.
-        @type  vconstraints: dict
-        """
-        msg = "%s doesn't provide iteration" % self.__class__.__name__
-        raise NotImplementedError(msg)
-
-
 class BacktrackingSolver(Solver):
-    """
-    Problem solver with backtracking capabilities
 
-    Examples:
-
-    >>> result = [[('a', 1), ('b', 2)],
-    ...           [('a', 1), ('b', 3)],
-    ...           [('a', 2), ('b', 3)]]
-
-    >>> problem = Problem(BacktrackingSolver())
-    >>> problem.addVariables(["a", "b"], [1, 2, 3])
-    >>> problem.addConstraint(lambda a, b: b > a, ["a", "b"])
-
-    >>> solution = problem.getSolution()
-    >>> sorted(solution.items()) in result
-    True
-
-    >>> for solution in problem.getSolutionIter():
-    ...     sorted(solution.items()) in result
-    True
-    True
-    True
-
-    >>> for solution in problem.getSolutions():
-    ...     sorted(solution.items()) in result
-    True
-    True
-    True
-    """
 
     def __init__(self, forwardcheck=True):
         """
@@ -487,187 +233,6 @@ class BacktrackingSolver(Solver):
 
         raise RuntimeError("Can't happen")
 
-    def getSolution(self, domains, constraints, vconstraints):
-        iter = self.getSolutionIter(domains, constraints, vconstraints)
-        try:
-            return next(iter)
-        except StopIteration:
-            return None
-
-    def getSolutions(self, domains, constraints, vconstraints):
-        return list(self.getSolutionIter(domains, constraints, vconstraints))
-
-
-class RecursiveBacktrackingSolver(Solver):
-    """
-    Recursive problem solver with backtracking capabilities
-
-    Examples:
-
-    >>> result = [[('a', 1), ('b', 2)],
-    ...           [('a', 1), ('b', 3)],
-    ...           [('a', 2), ('b', 3)]]
-
-    >>> problem = Problem(RecursiveBacktrackingSolver())
-    >>> problem.addVariables(["a", "b"], [1, 2, 3])
-    >>> problem.addConstraint(lambda a, b: b > a, ["a", "b"])
-
-    >>> solution = problem.getSolution()
-    >>> sorted(solution.items()) in result
-    True
-
-    >>> for solution in problem.getSolutions():
-    ...     sorted(solution.items()) in result
-    True
-    True
-    True
-
-    >>> problem.getSolutionIter()
-    Traceback (most recent call last):
-       ...
-    NotImplementedError: RecursiveBacktrackingSolver doesn't provide iteration
-    """
-
-    def __init__(self, forwardcheck=True):
-        """
-        @param forwardcheck: If false forward checking will not be requested
-                             to constraints while looking for solutions
-                             (default is true)
-        @type  forwardcheck: bool
-        """
-        self._forwardcheck = forwardcheck
-
-    def recursiveBacktracking(self, solutions, domains, vconstraints,
-                              assignments, single):
-
-        # Mix the Degree and Minimum Remaing Values (MRV) heuristics
-        lst = [(-len(vconstraints[variable]),
-                len(domains[variable]), variable) for variable in domains]
-        lst.sort()
-        for item in lst:
-            if item[-1] not in assignments:
-                # Found an unassigned variable. Let's go.
-                break
-        else:
-            # No unassigned variables. We've got a solution.
-            solutions.append(assignments.copy())
-            return solutions
-
-        variable = item[-1]
-        assignments[variable] = None
-
-        forwardcheck = self._forwardcheck
-        if forwardcheck:
-            pushdomains = [domains[x] for x in domains if x not in assignments]
-        else:
-            pushdomains = None
-
-        for value in domains[variable]:
-            assignments[variable] = value
-            if pushdomains:
-                for domain in pushdomains:
-                    domain.pushState()
-            for constraint, variables in vconstraints[variable]:
-                if not constraint(variables, domains, assignments,
-                                  pushdomains):
-                    # Value is not good.
-                    break
-            else:
-                # Value is good. Recurse and get next variable.
-                self.recursiveBacktracking(solutions, domains, vconstraints,
-                                           assignments, single)
-                if solutions and single:
-                    return solutions
-            if pushdomains:
-                for domain in pushdomains:
-                    domain.popState()
-        del assignments[variable]
-        return solutions
-
-    def getSolution(self, domains, constraints, vconstraints):
-        solutions = self.recursiveBacktracking([], domains, vconstraints,
-                                               {}, True)
-        return solutions and solutions[0] or None
-
-    def getSolutions(self, domains, constraints, vconstraints):
-        return self.recursiveBacktracking([], domains, vconstraints,
-                                          {}, False)
-
-
-class MinConflictsSolver(Solver):
-    """
-    Problem solver based on the minimum conflicts theory
-
-    Examples:
-
-    >>> result = [[('a', 1), ('b', 2)],
-    ...           [('a', 1), ('b', 3)],
-    ...           [('a', 2), ('b', 3)]]
-
-    >>> problem = Problem(MinConflictsSolver())
-    >>> problem.addVariables(["a", "b"], [1, 2, 3])
-    >>> problem.addConstraint(lambda a, b: b > a, ["a", "b"])
-
-    >>> solution = problem.getSolution()
-    >>> sorted(solution.items()) in result
-    True
-
-    >>> problem.getSolutions()
-    Traceback (most recent call last):
-       ...
-    NotImplementedError: MinConflictsSolver provides only a single solution
-
-    >>> problem.getSolutionIter()
-    Traceback (most recent call last):
-       ...
-    NotImplementedError: MinConflictsSolver doesn't provide iteration
-    """
-
-    def __init__(self, steps=1000):
-        """
-        @param steps: Maximum number of steps to perform before giving up
-                      when looking for a solution (default is 1000)
-        @type  steps: int
-        """
-        self._steps = steps
-
-    def getSolution(self, domains, constraints, vconstraints):
-        assignments = {}
-        # Initial assignment
-        for variable in domains:
-            assignments[variable] = random.choice(domains[variable])
-        for _ in xrange(self._steps):
-            conflicted = False
-            lst = list(domains.keys())
-            random.shuffle(lst)
-            for variable in lst:
-                # Check if variable is not in conflict
-                for constraint, variables in vconstraints[variable]:
-                    if not constraint(variables, domains, assignments):
-                        break
-                else:
-                    continue
-                # Variable has conflicts. Find values with less conflicts.
-                mincount = len(vconstraints[variable])
-                minvalues = []
-                for value in domains[variable]:
-                    assignments[variable] = value
-                    count = 0
-                    for constraint, variables in vconstraints[variable]:
-                        if not constraint(variables, domains, assignments):
-                            count += 1
-                    if count == mincount:
-                        minvalues.append(value)
-                    elif count < mincount:
-                        mincount = count
-                        del minvalues[:]
-                        minvalues.append(value)
-                # Pick a random one from these values.
-                assignments[variable] = random.choice(minvalues)
-                conflicted = True
-            if not conflicted:
-                return assignments
-        return None
 
 # ----------------------------------------------------------------------
 # Variables
@@ -701,13 +266,6 @@ Unassigned = Variable("Unassigned")
 
 
 class Domain(list):
-    """
-    Class used to control possible values for variables
-
-    When list or tuples are used as domains, they are automatically
-    converted to an instance of that class.
-    """
-
     def __init__(self, set):
         """
         @param set: Set of values that the given variables may assume
@@ -769,31 +327,6 @@ class Constraint(object):
     Abstract base class for constraints
     """
 
-    def __call__(self, variables, domains, assignments, forwardcheck=False):
-        """
-        Perform the constraint checking
-
-        If the forwardcheck parameter is not false, besides telling if
-        the constraint is currently broken or not, the constraint
-        implementation may choose to hide values from the domains of
-        unassigned variables to prevent them from being used, and thus
-        prune the search space.
-
-        @param variables: Variables affected by that constraint, in the
-                          same order provided by the user
-        @type  variables: sequence
-        @param domains: Dictionary mapping variables to their domains
-        @type  domains: dict
-        @param assignments: Dictionary mapping assigned variables to their
-                            current assumed value
-        @type  assignments: dict
-        @param forwardcheck: Boolean value stating whether forward checking
-                             should be performed or not
-        @return: Boolean value stating if this constraint is currently
-                 broken or not
-        @rtype: bool
-        """
-        return True
 
     def preProcess(self, variables, domains, constraints, vconstraints):
         """
@@ -828,24 +361,7 @@ class Constraint(object):
 
     def forwardCheck(self, variables, domains, assignments,
                      _unassigned=Unassigned):
-        """
-        Helper method for generic forward checking
 
-        Currently, this method acts only when there's a single
-        unassigned variable.
-
-        @param variables: Variables affected by that constraint, in the
-                          same order provided by the user
-        @type  variables: sequence
-        @param domains: Dictionary mapping variables to their domains
-        @type  domains: dict
-        @param assignments: Dictionary mapping assigned variables to their
-                            current assumed value
-        @type  assignments: dict
-        @return: Boolean value stating if this constraint is currently
-                 broken or not
-        @rtype: bool
-        """
         unassignedvariable = _unassigned
         for variable in variables:
             if variable not in assignments:
@@ -870,27 +386,8 @@ class Constraint(object):
 
 
 class FunctionConstraint(Constraint):
-    """
-    Constraint which wraps a function defining the constraint logic
 
-    Examples:
 
-    >>> problem = Problem()
-    >>> problem.addVariables(["a", "b"], [1, 2])
-    >>> def func(a, b):
-    ...     return b > a
-    >>> problem.addConstraint(func, ["a", "b"])
-    >>> problem.getSolution()
-    {'a': 1, 'b': 2}
-
-    >>> problem = Problem()
-    >>> problem.addVariables(["a", "b"], [1, 2])
-    >>> def func(a, b):
-    ...     return b > a
-    >>> problem.addConstraint(FunctionConstraint(func), ["a", "b"])
-    >>> problem.getSolution()
-    {'a': 1, 'b': 2}
-    """
 
     def __init__(self, func, assigned=True):
         """
@@ -903,29 +400,11 @@ class FunctionConstraint(Constraint):
         self._func = func
         self._assigned = assigned
 
-    def __call__(self, variables, domains, assignments, forwardcheck=False,
-                 _unassigned=Unassigned):
-        parms = [assignments.get(x, _unassigned) for x in variables]
-        missing = parms.count(_unassigned)
-        if missing:
-            return ((self._assigned or self._func(*parms)) and
-                    (not forwardcheck or missing != 1 or
-                     self.forwardCheck(variables, domains, assignments)))
-        return self._func(*parms)
+
 
 
 class AllDifferentConstraint(Constraint):
-    """
-    Constraint enforcing that values of all given variables are different
 
-    Example:
-
-    >>> problem = Problem()
-    >>> problem.addVariables(["a", "b"], [1, 2])
-    >>> problem.addConstraint(AllDifferentConstraint())
-    >>> sorted(sorted(x.items()) for x in problem.getSolutions())
-    [[('a', 1), ('b', 2)], [('a', 2), ('b', 1)]]
-    """
 
     def __call__(self, variables, domains, assignments, forwardcheck=False,
                  _unassigned=Unassigned):
@@ -949,17 +428,6 @@ class AllDifferentConstraint(Constraint):
 
 
 class AllEqualConstraint(Constraint):
-    """
-    Constraint enforcing that values of all given variables are equal
-
-    Example:
-
-    >>> problem = Problem()
-    >>> problem.addVariables(["a", "b"], [1, 2])
-    >>> problem.addConstraint(AllEqualConstraint())
-    >>> sorted(sorted(x.items()) for x in problem.getSolutions())
-    [[('a', 1), ('b', 1)], [('a', 2), ('b', 2)]]
-    """
 
     def __call__(self, variables, domains, assignments, forwardcheck=False,
                  _unassigned=Unassigned):
@@ -983,47 +451,6 @@ class AllEqualConstraint(Constraint):
 
 
 class MaxSumConstraint(Constraint):
-    """
-    Constraint enforcing that values of given variables sum up to
-    a given amount
-
-    Example:
-
-    >>> problem = Problem()
-    >>> problem.addVariables(["a", "b"], [1, 2])
-    >>> problem.addConstraint(MaxSumConstraint(3))
-    >>> sorted(sorted(x.items()) for x in problem.getSolutions())
-    [[('a', 1), ('b', 1)], [('a', 1), ('b', 2)], [('a', 2), ('b', 1)]]
-    """
-
-    def __init__(self, maxsum, multipliers=None):
-        """
-        @param maxsum: Value to be considered as the maximum sum
-        @type  maxsum: number
-        @param multipliers: If given, variable values will be multiplied by
-                            the given factors before being summed to be checked
-        @type  multipliers: sequence of numbers
-        """
-        self._maxsum = maxsum
-        self._multipliers = multipliers
-
-    def preProcess(self, variables, domains, constraints, vconstraints):
-        Constraint.preProcess(self, variables, domains,
-                              constraints, vconstraints)
-        multipliers = self._multipliers
-        maxsum = self._maxsum
-        if multipliers:
-            for variable, multiplier in zip(variables, multipliers):
-                domain = domains[variable]
-                for value in domain[:]:
-                    if value * multiplier > maxsum:
-                        domain.remove(value)
-        else:
-            for variable in variables:
-                domain = domains[variable]
-                for value in domain[:]:
-                    if value > maxsum:
-                        domain.remove(value)
 
     def __call__(self, variables, domains, assignments, forwardcheck=False):
         multipliers = self._multipliers
@@ -1067,18 +494,6 @@ class MaxSumConstraint(Constraint):
 
 
 class ExactSumConstraint(Constraint):
-    """
-    Constraint enforcing that values of given variables sum exactly
-    to a given amount
-
-    Example:
-
-    >>> problem = Problem()
-    >>> problem.addVariables(["a", "b"], [1, 2])
-    >>> problem.addConstraint(ExactSumConstraint(3))
-    >>> sorted(sorted(x.items()) for x in problem.getSolutions())
-    [[('a', 1), ('b', 2)], [('a', 2), ('b', 1)]]
-    """
 
     def __init__(self, exactsum, multipliers=None):
         """
@@ -1090,24 +505,6 @@ class ExactSumConstraint(Constraint):
         """
         self._exactsum = exactsum
         self._multipliers = multipliers
-
-    def preProcess(self, variables, domains, constraints, vconstraints):
-        Constraint.preProcess(self, variables, domains,
-                              constraints, vconstraints)
-        multipliers = self._multipliers
-        exactsum = self._exactsum
-        if multipliers:
-            for variable, multiplier in zip(variables, multipliers):
-                domain = domains[variable]
-                for value in domain[:]:
-                    if value * multiplier > exactsum:
-                        domain.remove(value)
-        else:
-            for variable in variables:
-                domain = domains[variable]
-                for value in domain[:]:
-                    if value > exactsum:
-                        domain.remove(value)
 
     def __call__(self, variables, domains, assignments, forwardcheck=False):
         multipliers = self._multipliers
@@ -1159,29 +556,6 @@ class ExactSumConstraint(Constraint):
 
 
 class MinSumConstraint(Constraint):
-    """
-    Constraint enforcing that values of given variables sum at least
-    to a given amount
-
-    Example:
-
-    >>> problem = Problem()
-    >>> problem.addVariables(["a", "b"], [1, 2])
-    >>> problem.addConstraint(MinSumConstraint(3))
-    >>> sorted(sorted(x.items()) for x in problem.getSolutions())
-    [[('a', 1), ('b', 2)], [('a', 2), ('b', 1)], [('a', 2), ('b', 2)]]
-    """
-
-    def __init__(self, minsum, multipliers=None):
-        """
-        @param minsum: Value to be considered as the minimum sum
-        @type  minsum: number
-        @param multipliers: If given, variable values will be multiplied by
-                            the given factors before being summed to be checked
-        @type  multipliers: sequence of numbers
-        """
-        self._minsum = minsum
-        self._multipliers = multipliers
 
     def __call__(self, variables, domains, assignments, forwardcheck=False):
         for variable in variables:
@@ -1203,29 +577,6 @@ class MinSumConstraint(Constraint):
 
 
 class InSetConstraint(Constraint):
-    """
-    Constraint enforcing that values of given variables are present in
-    the given set
-
-    Example:
-
-    >>> problem = Problem()
-    >>> problem.addVariables(["a", "b"], [1, 2])
-    >>> problem.addConstraint(InSetConstraint([1]))
-    >>> sorted(sorted(x.items()) for x in problem.getSolutions())
-    [[('a', 1), ('b', 1)]]
-    """
-
-    def __init__(self, set):
-        """
-        @param set: Set of allowed values
-        @type  set: set
-        """
-        self._set = set
-
-    def __call__(self, variables, domains, assignments, forwardcheck=False):
-        # preProcess() will remove it.
-        raise RuntimeError("Can't happen")
 
     def preProcess(self, variables, domains, constraints, vconstraints):
         set = self._set
@@ -1239,29 +590,6 @@ class InSetConstraint(Constraint):
 
 
 class NotInSetConstraint(Constraint):
-    """
-    Constraint enforcing that values of given variables are not present in
-    the given set
-
-    Example:
-
-    >>> problem = Problem()
-    >>> problem.addVariables(["a", "b"], [1, 2])
-    >>> problem.addConstraint(NotInSetConstraint([1]))
-    >>> sorted(sorted(x.items()) for x in problem.getSolutions())
-    [[('a', 2), ('b', 2)]]
-    """
-
-    def __init__(self, set):
-        """
-        @param set: Set of disallowed values
-        @type  set: set
-        """
-        self._set = set
-
-    def __call__(self, variables, domains, assignments, forwardcheck=False):
-        # preProcess() will remove it.
-        raise RuntimeError("Can't happen")
 
     def preProcess(self, variables, domains, constraints, vconstraints):
         set = self._set
@@ -1275,33 +603,6 @@ class NotInSetConstraint(Constraint):
 
 
 class SomeInSetConstraint(Constraint):
-    """
-    Constraint enforcing that at least some of the values of given
-    variables must be present in a given set
-
-    Example:
-
-    >>> problem = Problem()
-    >>> problem.addVariables(["a", "b"], [1, 2])
-    >>> problem.addConstraint(SomeInSetConstraint([1]))
-    >>> sorted(sorted(x.items()) for x in problem.getSolutions())
-    [[('a', 1), ('b', 1)], [('a', 1), ('b', 2)], [('a', 2), ('b', 1)]]
-    """
-
-    def __init__(self, set, n=1, exact=False):
-        """
-        @param set: Set of values to be checked
-        @type  set: set
-        @param n: Minimum number of assigned values that should be present
-                  in set (default is 1)
-        @type  n: int
-        @param exact: Whether the number of assigned values which are
-                      present in set must be exactly C{n}
-        @type  exact: bool
-        """
-        self._set = set
-        self._n = n
-        self._exact = exact
 
     def __call__(self, variables, domains, assignments, forwardcheck=False):
         set = self._set
@@ -1341,33 +642,6 @@ class SomeInSetConstraint(Constraint):
 
 
 class SomeNotInSetConstraint(Constraint):
-    """
-    Constraint enforcing that at least some of the values of given
-    variables must not be present in a given set
-
-    Example:
-
-    >>> problem = Problem()
-    >>> problem.addVariables(["a", "b"], [1, 2])
-    >>> problem.addConstraint(SomeNotInSetConstraint([1]))
-    >>> sorted(sorted(x.items()) for x in problem.getSolutions())
-    [[('a', 1), ('b', 2)], [('a', 2), ('b', 1)], [('a', 2), ('b', 2)]]
-    """
-
-    def __init__(self, set, n=1, exact=False):
-        """
-        @param set: Set of values to be checked
-        @type  set: set
-        @param n: Minimum number of assigned values that should not be present
-                  in set (default is 1)
-        @type  n: int
-        @param exact: Whether the number of assigned values which are
-                      not present in set must be exactly C{n}
-        @type  exact: bool
-        """
-        self._set = set
-        self._n = n
-        self._exact = exact
 
     def __call__(self, variables, domains, assignments, forwardcheck=False):
         set = self._set
@@ -1404,8 +678,3 @@ class SomeNotInSetConstraint(Constraint):
                 if found < self._n:
                     return False
         return True
-
-
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod()
